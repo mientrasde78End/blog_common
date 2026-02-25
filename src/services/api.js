@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://mega-data.onrender.com/api/blog/",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
-// 👉 INTERCEPTOR: añade el token a TODAS las requests
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
