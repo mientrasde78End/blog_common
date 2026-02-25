@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { registerUser } from "../services/auth";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
 export default function Register() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/blog");
+    }
+  }, [isAuthenticated, navigate]);
 
   async function handleSubmit(e) {
     e.preventDefault();

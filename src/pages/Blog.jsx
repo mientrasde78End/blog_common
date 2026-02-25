@@ -9,7 +9,6 @@ export default function Blog() {
 
   const [posts, setPosts] = useState([]);
   const [myPost, setMyPost] = useState(null);
-
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -52,21 +51,15 @@ export default function Blog() {
 
   return (
     <>
-      {/* HEADER */}
       <header>
         <strong>MiniBlog</strong>
 
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+        <div>
           <span>{username}</span>
 
-          {myPost && (
-            <button className="edit-btn" onClick={goToMyPost}>
-              Ir a mi post
-            </button>
-          )}
+          {myPost && <button onClick={goToMyPost}>Ir a mi post</button>}
 
           <button
-            className="logout-btn"
             onClick={() => {
               logout();
               navigate("/login");
@@ -77,17 +70,12 @@ export default function Blog() {
         </div>
       </header>
 
-      {/* POSTS */}
       <section>
         {posts.map((p) => {
           const isMine = myPost && p.id === myPost.id;
 
           return (
-            <div
-              key={p.id}
-              ref={isMine ? myPostRef : null}
-              className={`post-card ${isMine ? "mine" : ""}`}
-            >
+            <div key={p.id} ref={isMine ? myPostRef : null}>
               {isMine && editing ? (
                 <>
                   <input
@@ -98,37 +86,24 @@ export default function Blog() {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                   />
-
-                  <div className="post-actions">
-                    <button onClick={handleUpdate}>Guardar</button>
-                    <button
-                      className="cancel"
-                      onClick={() => {
-                        setEditing(false);
-                        setTitle(myPost.title);
-                        setContent(myPost.content);
-                      }}
-                    >
-                      Cancelar
-                    </button>
-                  </div>
+                  <button onClick={handleUpdate}>Guardar</button>
+                  <button
+                    onClick={() => {
+                      setEditing(false);
+                      setTitle(myPost.title);
+                      setContent(myPost.content);
+                    }}
+                  >
+                    Cancelar
+                  </button>
                 </>
               ) : (
                 <>
                   <h3>{p.title}</h3>
                   <p>{p.content}</p>
                   <small>@{p.username}</small>
-
                   {isMine && (
-                    <>
-                      <div className="badge">Tu post</div>
-                      <button
-                        className="edit-btn"
-                        onClick={() => setEditing(true)}
-                      >
-                        Editar
-                      </button>
-                    </>
+                    <button onClick={() => setEditing(true)}>Editar</button>
                   )}
                 </>
               )}
@@ -137,29 +112,22 @@ export default function Blog() {
         })}
       </section>
 
-      {/* MODAL PRIMER POST */}
       {!myPost && (
-        <div className="modal-backdrop">
-          <form className="modal" onSubmit={handleCreate}>
-            <h2>Publica tu primer post</h2>
-
-            <input
-              placeholder="Título"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
-
-            <textarea
-              placeholder="Descripción"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              required
-            />
-
-            <button>Publicar</button>
-          </form>
-        </div>
+        <form onSubmit={handleCreate}>
+          <input
+            placeholder="Título"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+          <textarea
+            placeholder="Descripción"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            required
+          />
+          <button>Publicar</button>
+        </form>
       )}
     </>
   );
