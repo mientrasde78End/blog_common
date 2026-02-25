@@ -1,27 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { registerUser } from "../services/auth";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/useAuth";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Register() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
 
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/blog");
-    }
-  }, [isAuthenticated, navigate]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await registerUser(form);
-    navigate("/login");
+    setError(null);
+    setLoading(true);
+
+    try {
+      await registerUser(form);
+      navigate("/login");
+    } catch {
+      setError("Error creando la cuenta");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -32,6 +36,7 @@ export default function Register() {
         placeholder="Usuario"
         value={form.username}
         onChange={(e) => setForm({ ...form, username: e.target.value })}
+        required
       />
 
       <input
@@ -39,9 +44,18 @@ export default function Register() {
         placeholder="Contraseña"
         value={form.password}
         onChange={(e) => setForm({ ...form, password: e.target.value })}
+        required
       />
 
-      <button>Registrarse</button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <button disabled={loading}>
+        {loading ? "Creando..." : "Registrarse"}
+      </button>
+
+      <p>
+        ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+      </p>
     </form>
   );
 }
