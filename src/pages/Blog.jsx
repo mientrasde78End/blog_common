@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getPosts, getMyPost, createPost, updatePost } from "../api/posts";
+import { getPosts, getMyPost, createPost, updatePost } from "../services/posts";
 import { useAuth } from "../context/useAuth";
 
 export default function Blog() {
