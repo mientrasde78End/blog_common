@@ -45,20 +45,12 @@ export default function Blog() {
     window.location.reload();
   }
 
-  function goToMyPost() {
-    myPostRef.current?.scrollIntoView({ behavior: "smooth" });
-  }
-
   return (
     <>
       <header>
         <strong>MiniBlog</strong>
-
         <div>
           <span>{username}</span>
-
-          {myPost && <button onClick={goToMyPost}>Ir a mi post</button>}
-
           <button
             onClick={() => {
               logout();
