@@ -1,31 +1,18 @@
 import { useState } from "react";
 import { registerUser } from "../services/auth";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const navigate = useNavigate();
-
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
 
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-
   async function handleSubmit(e) {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    try {
-      await registerUser(form);
-      navigate("/login");
-    } catch {
-      setError("Error creando la cuenta");
-    } finally {
-      setLoading(false);
-    }
+    await registerUser(form);
+    navigate("/login");
   }
 
   return (
@@ -47,15 +34,7 @@ export default function Register() {
         required
       />
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <button disabled={loading}>
-        {loading ? "Creando..." : "Registrarse"}
-      </button>
-
-      <p>
-        ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
-      </p>
+      <button>Registrarse</button>
     </form>
   );
 }
