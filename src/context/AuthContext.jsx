@@ -6,6 +6,8 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [username, setUsername] = useState(localStorage.getItem("username"));
 
+  const isAuthenticated = !!token;
+
   function login(accessToken, user) {
     localStorage.setItem("token", accessToken);
     localStorage.setItem("username", user);
@@ -21,7 +23,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ token, username, login, logout, isAuthenticated: !!token }}
+      value={{ token, username, isAuthenticated, login, logout }}
     >
       {children}
     </AuthContext.Provider>
