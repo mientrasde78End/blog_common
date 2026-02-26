@@ -39,53 +39,64 @@ export default function Blog() {
   }
 
   return (
-    <div>
-      <h2>Bienvenido {username}</h2>
-      <button onClick={logout}>Cerrar sesión</button>
-
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="Escribe algo..."
-      />
-      <button onClick={handleCreate}>Publicar</button>
-
-      {posts.map((post) => (
-        <div key={post.id} className={`post-card ${post.mine ? "mine" : ""}`}>
-          {editing === post.id ? (
-            <>
-              <textarea
-                value={editText}
-                onChange={(e) => setEditText(e.target.value)}
-              />
-              <div className="post-actions">
-                <button onClick={() => handleUpdate(post.id)}>Guardar</button>
-                <button className="cancel" onClick={() => setEditing(null)}>
-                  Cancelar
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <p>{post.content}</p>
-              {post.mine && (
-                <>
-                  <span className="badge">Tu post</span>
-                  <button
-                    className="edit-btn"
-                    onClick={() => {
-                      setEditing(post.id);
-                      setEditText(post.content);
-                    }}
-                  >
-                    Editar
-                  </button>
-                </>
-              )}
-            </>
-          )}
+    <>
+      <header>
+        <strong>MiniBlog</strong>
+        <div>
+          <span>{username}</span>
+          <button className="logout-btn" onClick={logout}>
+            Cerrar sesión
+          </button>
         </div>
-      ))}
-    </div>
+      </header>
+
+      <main className="blog-wrapper">
+        <div className="blog-card">
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Escribe algo..."
+          />
+          <button onClick={handleCreate}>Publicar</button>
+        </div>
+
+        {posts.map((post) => (
+          <div key={post.id} className={`post-card ${post.mine ? "mine" : ""}`}>
+            {editing === post.id ? (
+              <>
+                <textarea
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                />
+                <div className="post-actions">
+                  <button onClick={() => handleUpdate(post.id)}>Guardar</button>
+                  <button className="cancel" onClick={() => setEditing(null)}>
+                    Cancelar
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p>{post.content}</p>
+                {post.mine && (
+                  <>
+                    <span className="badge">Tu post</span>
+                    <button
+                      className="edit-btn"
+                      onClick={() => {
+                        setEditing(post.id);
+                        setEditText(post.content);
+                      }}
+                    >
+                      Editar
+                    </button>
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        ))}
+      </main>
+    </>
   );
 }

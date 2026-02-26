@@ -17,29 +17,31 @@ export default function Login() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Iniciar sesión</h2>
+    <div className="auth-wrapper">
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <h2>Iniciar sesión</h2>
 
-      <input
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Usuario"
-        required
-      />
+        <input
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Usuario"
+          required
+        />
 
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Contraseña"
-        required
-      />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Contraseña"
+          required
+        />
 
-      <button>Entrar</button>
+        <button>Entrar</button>
 
-      <p>
-        ¿No tienes cuenta? <Link to="/">Crear cuenta</Link>
-      </p>
-    </form>
+        <p className="auth-link">
+          ¿No tienes cuenta? <Link to="/">Crear cuenta</Link>
+        </p>
+      </form>
+    </div>
   );
 }
