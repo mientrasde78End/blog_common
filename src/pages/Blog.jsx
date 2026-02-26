@@ -54,7 +54,6 @@ export default function Blog() {
 
   return (
     <>
-      {/* HEADER */}
       <header>
         <strong>MiniBlog</strong>
 
@@ -79,7 +78,6 @@ export default function Blog() {
         </div>
       </header>
 
-      {/* BLOG */}
       <main className="blog-wrapper">
         {posts.map((p) => {
           const isMine = myPost && p.id === myPost.id;
@@ -142,7 +140,6 @@ export default function Blog() {
         })}
       </main>
 
-      {/* MODAL PRIMER POST */}
       {!myPost && (
         <div className="modal-backdrop">
           <form className="modal" onSubmit={handleCreate}>
