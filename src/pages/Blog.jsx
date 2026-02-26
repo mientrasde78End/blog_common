@@ -5,10 +5,10 @@ import { useAuth } from "../context/useAuth";
 export default function Blog() {
   const [posts, setPosts] = useState([]);
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [description, setDescription] = useState("");
   const [editing, setEditing] = useState(null);
   const [editTitle, setEditTitle] = useState("");
-  const [editText, setEditText] = useState("");
+  const [editDescription, setEditDescription] = useState("");
   const { username, logout } = useAuth();
 
   useEffect(() => {
@@ -19,99 +19,115 @@ export default function Blog() {
     const all = await getPosts();
     const mine = await getMyPost();
 
-    const mineArray = Array.isArray(mine.data) ? mine.data : [];
-    const mineIds = new Set(mineArray.map((p) => p.id));
+    const mineIds = new Set(
+      Array.isArray(mine.data) ? mine.data.map((p) => p.id) : [],
+    );
 
-    const merged = all.data.map((p) => ({
-      ...p,
-      mine: mineIds.has(p.id),
-    }));
+    const merged = Array.isArray(all.data)
+      ? all.data.map((p) => ({
+          ...p,
+          mine: mineIds.has(p.id),
+        }))
+      : [];
 
     setPosts(merged);
   }
 
   async function handleCreate() {
-    await createPost({ title, description: content });
+    if (!title || !description) return;
+
+    await createPost({ title, description });
     setTitle("");
-    setContent("");
+    setDescription("");
     loadPosts();
   }
 
   async function handleUpdate(id) {
-    await updatePost(id, { title: editTitle, description: editText });
+    await updatePost(id, {
+      title: editTitle,
+      description: editDescription,
+    });
     setEditing(null);
     loadPosts();
   }
 
   return (
     <>
-      <header>
+      <header className="blog-header">
         <strong>MiniBlog</strong>
         <div>
           <span>{username}</span>
-          <button className="logout-btn" onClick={logout}>
-            Cerrar sesión
-          </button>
+          <button onClick={logout}>Cerrar sesión</button>
         </div>
       </header>
 
       <main className="blog-wrapper">
         <div className="blog-card">
+          <h2>Nuevo Post</h2>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Título"
           />
           <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Descripción"
           />
           <button onClick={handleCreate}>Publicar</button>
         </div>
 
-        {posts.map((post) => (
-          <div key={post.id} className={`post-card ${post.mine ? "mine" : ""}`}>
-            {editing === post.id ? (
-              <>
-                <input
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                />
-                <textarea
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                />
-                <div className="post-actions">
-                  <button onClick={() => handleUpdate(post.id)}>Guardar</button>
-                  <button className="cancel" onClick={() => setEditing(null)}>
-                    Cancelar
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <h3>{post.title}</h3>
-                <p>{post.description}</p>
-                {post.mine && (
-                  <>
-                    <span className="badge">Tu post</span>
+        {posts.length === 0 ? (
+          <div className="empty-card">
+            <h2>No hay posts</h2>
+            <p>Publica el primero ✨</p>
+          </div>
+        ) : (
+          posts.map((post) => (
+            <div
+              key={post.id}
+              className={`post-card ${post.mine ? "mine" : ""}`}
+            >
+              {editing === post.id ? (
+                <>
+                  <input
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
+                  />
+                  <textarea
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                  />
+                  <div className="actions">
+                    <button onClick={() => handleUpdate(post.id)}>
+                      Guardar
+                    </button>
+                    <button onClick={() => setEditing(null)} className="cancel">
+                      Cancelar
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h3>{post.title}</h3>
+                  <p>{post.description}</p>
+                  {post.mine && (
                     <button
-                      className="edit-btn"
+                      className="edit"
                       onClick={() => {
                         setEditing(post.id);
                         setEditTitle(post.title);
-                        setEditText(post.description);
+                        setEditDescription(post.description);
                       }}
                     >
                       Editar
                     </button>
-                  </>
-                )}
-              </>
-            )}
-          </div>
-        ))}
+                  )}
+                </>
+              )}
+            </div>
+          ))
+        )}
       </main>
     </>
   );

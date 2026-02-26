@@ -10,6 +10,8 @@ body {
   color: #222;
 }
 
+/* ================= HEADER ================= */
+
 header {
   display: flex;
   justify-content: space-between;
@@ -37,6 +39,8 @@ header span {
   background: #dc2626;
   color: white;
 }
+
+/* ================= AUTH ================= */
 
 .auth-wrapper {
   min-height: 100vh;
@@ -88,11 +92,15 @@ header span {
   text-decoration: none;
 }
 
+/* ================= BLOG ================= */
+
 .blog-wrapper {
   max-width: 720px;
   margin: 40px auto 120px;
   padding: 0 16px;
 }
+
+/* Crear post */
 
 .blog-card {
   background: white;
@@ -102,13 +110,22 @@ header span {
   margin-bottom: 24px;
 }
 
+.blog-card h2 {
+  margin-bottom: 14px;
+}
+
+.blog-card input,
 .blog-card textarea {
   width: 100%;
-  height: 90px;
-  border-radius: 14px;
   padding: 12px;
+  border-radius: 14px;
   border: 1px solid #c7d2fe;
   margin-bottom: 12px;
+}
+
+.blog-card textarea {
+  height: 90px;
+  resize: none;
 }
 
 .blog-card button {
@@ -120,6 +137,19 @@ header span {
   font-weight: 600;
   cursor: pointer;
 }
+
+/* ================= EMPTY STATE ================= */
+
+.empty-card {
+  background: white;
+  padding: 40px 20px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  color: #6b7280;
+}
+
+/* ================= POSTS ================= */
 
 .post-card {
   background: white;
@@ -133,13 +163,30 @@ header span {
   background: linear-gradient(180deg, #eef2ff, white);
 }
 
+.post-card h3 {
+  margin-bottom: 6px;
+}
+
+.post-card p {
+  color: #444;
+  line-height: 1.4;
+}
+
+.post-card input,
 .post-card textarea {
   width: 100%;
-  height: 90px;
-  border-radius: 14px;
   padding: 12px;
+  border-radius: 14px;
   border: 1px solid #c7d2fe;
+  margin-bottom: 10px;
 }
+
+.post-card textarea {
+  height: 90px;
+  resize: none;
+}
+
+/* ================= ACTIONS ================= */
 
 .post-actions {
   display: flex;
@@ -157,6 +204,8 @@ header span {
 .post-actions .cancel {
   background: #e5e7eb;
 }
+
+/* ================= EXTRAS ================= */
 
 .badge {
   display: inline-block;
