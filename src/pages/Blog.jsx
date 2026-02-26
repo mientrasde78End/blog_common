@@ -14,6 +14,8 @@ export default function Blog() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
+  const [showModal, setShowModal] = useState(true); // 👈 NUEVO
+
   const myPostRef = useRef(null);
 
   useEffect(() => {
@@ -39,6 +41,7 @@ export default function Blog() {
     await createPost({ title, content });
     setTitle("");
     setContent("");
+    setShowModal(false); // 👈 cerrar modal al publicar
     loadData();
   }
 
@@ -140,9 +143,26 @@ export default function Blog() {
         })}
       </main>
 
-      {!myPost && (
+      {!myPost && showModal && (
         <div className="modal-backdrop">
           <form className="modal" onSubmit={handleCreate}>
+            {/* ❌ BOTÓN PARA CERRAR */}
+            <button
+              type="button"
+              onClick={() => setShowModal(false)}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                background: "transparent",
+                border: "none",
+                fontSize: "20px",
+                cursor: "pointer",
+              }}
+            >
+              ✕
+            </button>
+
             <h2>Publica tu primer post</h2>
 
             <input
