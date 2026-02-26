@@ -4,8 +4,10 @@ import { useAuth } from "../context/useAuth";
 
 export default function Blog() {
   const [posts, setPosts] = useState([]);
+  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [editing, setEditing] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
   const [editText, setEditText] = useState("");
   const { username, logout } = useAuth();
 
@@ -17,7 +19,9 @@ export default function Blog() {
     const all = await getPosts();
     const mine = await getMyPost();
 
-    const mineIds = new Set(mine.data.map((p) => p.id));
+    const mineArray = Array.isArray(mine.data) ? mine.data : [];
+    const mineIds = new Set(mineArray.map((p) => p.id));
+
     const merged = all.data.map((p) => ({
       ...p,
       mine: mineIds.has(p.id),
@@ -27,13 +31,14 @@ export default function Blog() {
   }
 
   async function handleCreate() {
-    await createPost({ content });
+    await createPost({ title, description: content });
+    setTitle("");
     setContent("");
     loadPosts();
   }
 
   async function handleUpdate(id) {
-    await updatePost(id, { content: editText });
+    await updatePost(id, { title: editTitle, description: editText });
     setEditing(null);
     loadPosts();
   }
@@ -52,10 +57,15 @@ export default function Blog() {
 
       <main className="blog-wrapper">
         <div className="blog-card">
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Título"
+          />
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Escribe algo..."
+            placeholder="Descripción"
           />
           <button onClick={handleCreate}>Publicar</button>
         </div>
@@ -64,6 +74,10 @@ export default function Blog() {
           <div key={post.id} className={`post-card ${post.mine ? "mine" : ""}`}>
             {editing === post.id ? (
               <>
+                <input
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                />
                 <textarea
                   value={editText}
                   onChange={(e) => setEditText(e.target.value)}
@@ -77,7 +91,8 @@ export default function Blog() {
               </>
             ) : (
               <>
-                <p>{post.content}</p>
+                <h3>{post.title}</h3>
+                <p>{post.description}</p>
                 {post.mine && (
                   <>
                     <span className="badge">Tu post</span>
@@ -85,7 +100,8 @@ export default function Blog() {
                       className="edit-btn"
                       onClick={() => {
                         setEditing(post.id);
-                        setEditText(post.content);
+                        setEditTitle(post.title);
+                        setEditText(post.description);
                       }}
                     >
                       Editar
